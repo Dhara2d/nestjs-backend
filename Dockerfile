@@ -18,4 +18,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Define the default command
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]
