@@ -33,7 +33,6 @@ export class CatsController {
 
   @Put(':id')
   async update(@Param('id') id: string, @Body() updateCatDto: any) {
-    console.log(updateCatDto);
     return this.catsService.update(id, updateCatDto);
   }
 

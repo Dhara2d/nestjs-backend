@@ -25,7 +25,6 @@ export class AppointmentsService {
     createAppointmentDto: CreateAppointmentDto,
   ): Promise<Appointment | []> {
     const { providerId, serviceId, date, time, userId } = createAppointmentDto;
-    console.log(createAppointmentDto);
     const service = await this.serviceProviderModel.findById(providerId);
     if (!service) {
       throw new NotFoundException('Service Provider not found');

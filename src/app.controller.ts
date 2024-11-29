@@ -17,7 +17,6 @@ export class AppController {
 
   @Post('/create')
   createItem(@Body() body: any): string {
-    console.log('Received data:', body);
     return `Item created successfully! Received: ${JSON.stringify(body)}`;
   }
 }

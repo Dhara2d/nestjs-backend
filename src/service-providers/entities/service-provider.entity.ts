@@ -5,7 +5,7 @@ export type ServiceProviderDocument = ServiceProvider & Document;
 
 @Schema()
 export class ServiceProvider {
-  _id: ObjectId;
+  _id: Types.ObjectId;
 
   @Prop({ required: true })
   name: string;
