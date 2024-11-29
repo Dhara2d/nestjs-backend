@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CatsModule } from './cats/cats.module';
 import { AuthModule } from './auth/auth.module';
 import { ServicesModule } from './services/services.module';
 import { ServiceProvidersModule } from './service-providers/service-providers.module';
@@ -13,7 +12,6 @@ const uri =
 @Module({
   imports: [
     MongooseModule.forRoot(uri),
-    CatsModule,
     AuthModule,
     ServicesModule,
     ServiceProvidersModule,

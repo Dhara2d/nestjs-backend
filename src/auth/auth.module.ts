@@ -18,7 +18,7 @@ import { User, UserSchema } from './schema/user.schema';
     PassportModule,
     JwtModule.register({
       secret: 'your_secret_key',
-      signOptions: { expiresIn: '1h' },
+      signOptions: { expiresIn: '4h' },
     }),
   ],
   controllers: [AuthController],

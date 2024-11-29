@@ -18,7 +18,7 @@ export class AuthService {
   ) {}
 
   async getAllUsers(): Promise<User[]> {
-    return this.UserModal.find({}, { name: 1, email: 1 }).exec();
+    return this.UserModal.find({}, { name: 1, email: 1, role: 1 }).exec();
   }
 
   async validateUser(username: string, password: string): Promise<any> {
@@ -32,15 +32,20 @@ export class AuthService {
       throw new UnauthorizedException('Wrong credientials');
     }
 
-    return { userId: user._id, username: user.name };
+    return { userId: user._id, username: user.name, role: user.role };
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = {
+      username: user.username,
+      sub: user.userId,
+      role: user.role,
+    };
     return {
       access_token: this.jwtService.sign(payload),
       userName: payload.username,
       userId: payload.sub,
+      role: payload.role,
     };
   }
 
