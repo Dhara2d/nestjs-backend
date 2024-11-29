@@ -12,21 +12,21 @@ import { Model, Types } from 'mongoose';
 @Injectable()
 export class ServicesService {
   constructor(
-    @InjectModel(Service.name) private ServiceModel: Model<ServiceDocument>,
+    @InjectModel(Service.name) private service: Model<ServiceDocument>,
   ) {}
   async create(service: CreateServiceDto): Promise<Service> {
-    const isServiceAlreadyExit = await this.ServiceModel.findOne({
+    const isServiceAlreadyExit = await this.service.findOne({
       name: service.name,
     });
     if (isServiceAlreadyExit) {
       throw new UnauthorizedException('Service Already Exits');
     }
-    const createdService = new this.ServiceModel(service);
+    const createdService = new this.service(service);
     return createdService.save();
   }
 
   async findAll(): Promise<Service[]> {
-    const services = await this.ServiceModel.aggregate([
+    const services = await this.service.aggregate([
       {
         $lookup: {
           from: 'serviceproviders',
@@ -49,7 +49,7 @@ export class ServicesService {
   }
 
   async findOne(id: string): Promise<Service> {
-    const service = await this.ServiceModel.aggregate([
+    const service = await this.service.aggregate([
       {
         $match: { _id: new Types.ObjectId(id) },
       },
@@ -77,13 +77,11 @@ export class ServicesService {
   }
 
   async update(id: string, updateService: UpdateServiceDto): Promise<Service> {
-    const updatedService = await this.ServiceModel.findByIdAndUpdate(
-      id,
-      updateService,
-      {
+    const updatedService = await this.service
+      .findByIdAndUpdate(id, updateService, {
         new: true,
-      },
-    ).exec();
+      })
+      .exec();
     if (!updatedService) {
       throw new NotFoundException(`Service with ID ${id} not found`);
     }
@@ -91,6 +89,6 @@ export class ServicesService {
   }
 
   remove(id: string) {
-    return this.ServiceModel.findByIdAndDelete(id).exec();
+    return this.service.findByIdAndDelete(id).exec();
   }
 }

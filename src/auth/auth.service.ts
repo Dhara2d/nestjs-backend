@@ -13,9 +13,13 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectModel(User.name) private UserModal: Model<UserDocument>,
+    @InjectModel(User.name) private readonly UserModal: Model<UserDocument>,
     private readonly jwtService: JwtService,
   ) {}
+
+  async getAllUsers(): Promise<User[]> {
+    return this.UserModal.find({}, { name: 1, email: 1 }).exec();
+  }
 
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.UserModal.findOne({ name: username });

@@ -16,56 +16,60 @@ import { Model, Types } from 'mongoose';
 export class ServiceProvidersService {
   constructor(
     @InjectModel(ServiceProvider.name)
-    private readonly ServiceProvider: Model<ServiceProviderDocument>,
+    private readonly serviceProvider: Model<ServiceProviderDocument>,
   ) {}
   async create(
     serviceProvider: CreateServiceProviderDto,
   ): Promise<ServiceProvider> {
-    const isServiceAlreadyExit = await this.ServiceProvider.findOne({
-      email: serviceProvider.email,
-    }).lean();
+    const isServiceAlreadyExit = await this.serviceProvider
+      .findOne({
+        email: serviceProvider.email,
+      })
+      .lean();
     if (isServiceAlreadyExit) {
       throw new UnauthorizedException(
         `Service Provider with this email ${serviceProvider.email} Already Exits`,
       );
     }
     console.log(serviceProvider);
-    const createdService = new this.ServiceProvider(serviceProvider);
+    const createdService = new this.serviceProvider(serviceProvider);
     return createdService.save();
   }
 
   async findAll(): Promise<ServiceProvider[]> {
-    const serviceProviders = await this.ServiceProvider.aggregate([
-      {
-        $lookup: {
-          from: 'services',
-          localField: 'services',
-          foreignField: '_id',
-          as: 'serviceDetails',
+    const serviceProviders = await this.serviceProvider
+      .aggregate([
+        {
+          $lookup: {
+            from: 'services',
+            localField: 'services',
+            foreignField: '_id',
+            as: 'serviceDetails',
+          },
         },
-      },
-      {
-        $project: {
-          name: 1,
-          services: {
-            $map: {
-              input: '$serviceDetails',
-              as: 'service',
-              in: {
-                id: '$$service._id',
-                name: '$$service.name',
+        {
+          $project: {
+            name: 1,
+            services: {
+              $map: {
+                input: '$serviceDetails',
+                as: 'service',
+                in: {
+                  id: '$$service._id',
+                  name: '$$service.name',
+                },
               },
             },
           },
         },
-      },
-    ]).exec();
+      ])
+      .exec();
     console.log(serviceProviders);
     return serviceProviders;
   }
 
   async findOne(id: string): Promise<ServiceProvider> {
-    const service = await this.ServiceProvider.findById(id).exec();
+    const service = await this.serviceProvider.findById(id).exec();
     if (!service) {
       throw new NotFoundException(`Service Provider with ID ${id} not found`);
     }
@@ -76,13 +80,11 @@ export class ServiceProvidersService {
     id: string,
     updateServiceProviderDto: UpdateServiceProviderDto,
   ): Promise<ServiceProvider> {
-    const updatedService = await this.ServiceProvider.findByIdAndUpdate(
-      id,
-      updateServiceProviderDto,
-      {
+    const updatedService = await this.serviceProvider
+      .findByIdAndUpdate(id, updateServiceProviderDto, {
         new: true,
-      },
-    ).exec();
+      })
+      .exec();
     if (!updatedService) {
       throw new NotFoundException(`Service with ID ${id} not found`);
     }
@@ -90,6 +92,6 @@ export class ServiceProvidersService {
   }
 
   remove(id: string): Promise<ServiceProvider> {
-    return this.ServiceProvider.findByIdAndDelete(id).exec();
+    return this.serviceProvider.findByIdAndDelete(id).exec();
   }
 }
