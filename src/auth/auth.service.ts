@@ -21,8 +21,8 @@ export class AuthService {
     return this.UserModal.find({}, { name: 1, email: 1, role: 1 }).exec();
   }
 
-  async validateUser(username: string, password: string): Promise<any> {
-    const user = await this.UserModal.findOne({ name: username });
+  async validateUser(email: string, password: string): Promise<any> {
+    const user = await this.UserModal.findOne({ email: email });
     if (!user) {
       throw new UnauthorizedException('Wrong credientials');
     }
@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   async signup(signupData: SignupDTO) {
-    const { email, password, name } = signupData;
+    const { email, password, name, role } = signupData;
     const emailAlreadyExist = await this.UserModal.findOne({
       email: email,
     });
@@ -65,6 +65,7 @@ export class AuthService {
       name,
       email,
       password: hashedPassword,
+      role,
     });
 
     return newUser;

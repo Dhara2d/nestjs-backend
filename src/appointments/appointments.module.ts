@@ -3,10 +3,6 @@ import { AppointmentsService } from './appointments.service';
 import { AppointmentsController } from './appointments.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Appointment, AppointmentSchema } from './entities/appointment.entity';
-import {
-  ServiceProvider,
-  ServiceProviderSchema,
-} from '../service-providers/entities/service-provider.entity';
 
 @Module({
   imports: [
@@ -15,9 +11,7 @@ import {
         name: Appointment.name,
         schema: AppointmentSchema,
       },
-      { name: ServiceProvider.name, schema: ServiceProviderSchema },
     ]),
-    ServiceProvider,
   ],
   controllers: [AppointmentsController],
   providers: [AppointmentsService],

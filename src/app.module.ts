@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { ServicesModule } from './services/services.module';
-import { ServiceProvidersModule } from './service-providers/service-providers.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 
 const uri =
@@ -14,7 +13,6 @@ const uri =
     MongooseModule.forRoot(uri),
     AuthModule,
     ServicesModule,
-    ServiceProvidersModule,
     AppointmentsModule,
   ],
   controllers: [AppController],

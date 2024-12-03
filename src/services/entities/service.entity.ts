@@ -9,6 +9,12 @@ export class Service {
 
   @Prop({ required: true })
   name: string;
+
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: 'User' }],
+    required: true,
+  })
+  serviceProviders: Types.ObjectId[];
 }
 
 export const ServiceSchema = SchemaFactory.createForClass(Service);

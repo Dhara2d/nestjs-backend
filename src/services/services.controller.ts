@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
@@ -14,6 +15,7 @@ import { UpdateServiceDto } from './dto/update-service.dto';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/roles.enum';
 import { AuthRolesGuard } from 'src/roles/roles.guard';
+import { AddServiceProvidersToServiceDto } from './dto/add-serviceprovider-to-service.dto';
 
 @Controller('services')
 export class ServicesController {
@@ -27,7 +29,6 @@ export class ServicesController {
   }
 
   @Get()
-  @Post()
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(AuthRolesGuard)
   findAll() {
@@ -35,7 +36,6 @@ export class ServicesController {
   }
 
   @Get(':id')
-  @Post()
   @Roles(Role.ADMIN, Role.USER)
   @UseGuards(AuthRolesGuard)
   findOne(@Param('id') id: string) {
@@ -43,7 +43,6 @@ export class ServicesController {
   }
 
   @Patch(':id')
-  @Post()
   @Roles(Role.ADMIN)
   @UseGuards(AuthRolesGuard)
   update(@Param('id') id: string, @Body() updateServiceDto: UpdateServiceDto) {
@@ -51,10 +50,22 @@ export class ServicesController {
   }
 
   @Delete(':id')
-  @Post()
   @Roles(Role.ADMIN)
   @UseGuards(AuthRolesGuard)
   remove(@Param('id') id: string) {
     return this.servicesService.remove(id);
+  }
+
+  @Put(':id/add-serviceproviders')
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthRolesGuard)
+  addServiceProviders(
+    @Param('id') serviceProviderId: string,
+    @Body() serviceProviders: AddServiceProvidersToServiceDto,
+  ) {
+    return this.servicesService.addServiceProvidersToService(
+      serviceProviderId,
+      serviceProviders,
+    );
   }
 }
