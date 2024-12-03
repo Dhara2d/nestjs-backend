@@ -24,7 +24,9 @@ export class ServicesService {
       name: service.name,
     });
     if (isServiceAlreadyExit) {
-      throw new UnauthorizedException('Service Already Exits');
+      throw new UnauthorizedException(
+        `Service with this name ${service.name} Already Exits`,
+      );
     }
     const createdService = new this.service(service);
     return createdService.save();

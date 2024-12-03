@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ResponseInterceptor } from './interceptors/response/response.interceptor';
+import { HttpExceptionFilter } from './filters/http-exception/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,13 +15,15 @@ async function bootstrap() {
     }),
   );
 
+  app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalFilters(new HttpExceptionFilter());
+
   // Configure Swagger options
   const config = new DocumentBuilder()
     .setTitle('API Documentation')
     .setDescription('The API description')
     .setVersion('1.0')
-    .addTag('examples') // Optional: Tags for grouping APIs
-    .addBearerAuth() // Optional: Add authentication (JWT, Bearer, etc.)
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
