@@ -16,7 +16,10 @@ import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/roles.enum';
 import { AuthRolesGuard } from 'src/roles/roles.guard';
 import { AddServiceProvidersToServiceDto } from './dto/add-serviceprovider-to-service.dto';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('services')
+@ApiBearerAuth()
 @Controller('services')
 export class ServicesController {
   constructor(private readonly servicesService: ServicesService) {}
@@ -64,6 +67,19 @@ export class ServicesController {
     @Body() serviceProviders: AddServiceProvidersToServiceDto,
   ) {
     return this.servicesService.addServiceProvidersToService(
+      serviceProviderId,
+      serviceProviders,
+    );
+  }
+
+  @Put(':id/remove-serviceproviders')
+  @Roles(Role.ADMIN)
+  @UseGuards(AuthRolesGuard)
+  removeServiceProviders(
+    @Param('id') serviceProviderId: string,
+    @Body() serviceProviders: AddServiceProvidersToServiceDto,
+  ) {
+    return this.servicesService.removeServiceProvidersToService(
       serviceProviderId,
       serviceProviders,
     );

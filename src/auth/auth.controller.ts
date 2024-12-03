@@ -4,7 +4,9 @@ import { SignupDTO } from './dto/signup.dto';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/roles.enum';
 import { AuthRolesGuard } from 'src/roles/roles.guard';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Authorization')
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

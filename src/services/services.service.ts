@@ -139,7 +139,6 @@ export class ServicesService {
       (serviceProvider) =>
         !availableService.serviceProviders.includes(serviceProvider._id),
     );
-    console.log(validateServiceProviders, availableService, newServices);
     if (newServices.length === 0) {
       throw new BadRequestException('Service Providers has been already added');
     }
@@ -149,6 +148,28 @@ export class ServicesService {
         (serviceProvider) => new Types.ObjectId(serviceProvider),
       ),
     );
+    return availableService.save();
+  }
+
+  async removeServiceProvidersToService(
+    id: string,
+    serviceProvidersDto: AddServiceProvidersToServiceDto,
+  ): Promise<Service> {
+    const { serviceProviders } = serviceProvidersDto;
+    const availableService = await this.service.findById(id).exec();
+    if (!availableService) {
+      throw new NotFoundException(`Sevice with id ${id} not found`);
+    }
+    //check if the service providers are valid and available
+    const validateServiceProviders = await this.userModel.find({
+      _id: {
+        $in: serviceProviders.map(
+          (serviceProvider) => new Types.ObjectId(serviceProvider),
+        ),
+      },
+      role: Role.SERVICE_PROVIDER,
+    });
+
     return availableService.save();
   }
 }
