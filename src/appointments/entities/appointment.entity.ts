@@ -11,7 +11,7 @@ export class Appointment {
   @Prop({ type: Types.ObjectId, ref: 'Service', required: true })
   service: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'ServiceProvider', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   serviceProvider: Types.ObjectId;
 
   @Prop({ required: true })

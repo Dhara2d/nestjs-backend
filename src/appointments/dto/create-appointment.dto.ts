@@ -11,7 +11,7 @@ export class CreateAppointmentDto {
 
   @IsMongoId()
   @IsNotEmpty()
-  providerId: string;
+  serviceProviderId: string;
 
   @IsDateString()
   @IsNotEmpty()

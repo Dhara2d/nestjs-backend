@@ -3,6 +3,8 @@ import { AppointmentsService } from './appointments.service';
 import { AppointmentsController } from './appointments.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Appointment, AppointmentSchema } from './entities/appointment.entity';
+import { User, UserSchema } from 'src/auth/schema/user.schema';
+import { Service, ServiceSchema } from 'src/services/entities/service.entity';
 
 @Module({
   imports: [
@@ -10,6 +12,14 @@ import { Appointment, AppointmentSchema } from './entities/appointment.entity';
       {
         name: Appointment.name,
         schema: AppointmentSchema,
+      },
+      {
+        name: User.name,
+        schema: UserSchema,
+      },
+      {
+        name: Service.name,
+        schema: ServiceSchema,
       },
     ]),
   ],

@@ -16,6 +16,7 @@ import { GetAppointmentsDto } from './dto/get-appointments.dto';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/roles/roles.enum';
 import { AuthRolesGuard } from 'src/roles/roles.guard';
+import { AppointmentStatus } from './enum/appointment.enum';
 
 @Controller('appointments')
 export class AppointmentsController {
@@ -57,5 +58,20 @@ export class AppointmentsController {
   @UseGuards(AuthRolesGuard)
   remove(@Param('id') id: string) {
     return this.appointmentsService.remove(+id);
+  }
+
+  @Patch(':appointmentId/updateAppointmentStatus/:serviceProviderId')
+  @Roles(Role.SERVICE_PROVIDER)
+  @UseGuards(AuthRolesGuard)
+  updateStatus(
+    @Param('appointmentId') appointmentId: string,
+    @Param('serviceProviderId') serviceProviderId: string,
+    @Body() status: { status: AppointmentStatus },
+  ) {
+    return this.appointmentsService.updateAppointmentStatus(
+      appointmentId,
+      status.status,
+      serviceProviderId,
+    );
   }
 }

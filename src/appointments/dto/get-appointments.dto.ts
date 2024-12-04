@@ -1,6 +1,7 @@
 // dto/get-appointments.dto.ts
-import { IsMongoId, IsOptional } from 'class-validator';
+import { IsEnum, IsMongoId, IsOptional } from 'class-validator';
 import { Types } from 'mongoose';
+import { AppointmentStatus } from '../enum/appointment.enum';
 
 export class GetAppointmentsDto {
   @IsOptional()
@@ -14,4 +15,8 @@ export class GetAppointmentsDto {
   @IsOptional()
   @IsMongoId()
   userId?: Types.ObjectId;
+
+  @IsOptional()
+  @IsEnum(AppointmentStatus)
+  status?: string;
 }
