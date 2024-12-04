@@ -19,6 +19,7 @@ export class ServicesService {
     @InjectModel(Service.name) private service: Model<ServiceDocument>,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
+
   async create(service: CreateServiceDto): Promise<Service> {
     const isServiceAlreadyExit = await this.service.findOne({
       name: service.name,
@@ -32,7 +33,7 @@ export class ServicesService {
     return createdService.save();
   }
 
-  async findAll(): Promise<Service[]> {
+  async findAll(): Promise<{ services: Service[]; totalServices: number }> {
     const result = await this.service.aggregate([
       {
         $lookup: {
@@ -60,7 +61,9 @@ export class ServicesService {
       },
     ]);
 
-    return result;
+    const count = await this.service.countDocuments();
+
+    return { services: result, totalServices: count };
   }
 
   async findOne(id: string): Promise<Service> {
@@ -162,7 +165,7 @@ export class ServicesService {
     if (!availableService) {
       throw new NotFoundException(`Sevice with id ${id} not found`);
     }
-    //check if the service providers are valid and available
+
     const validateServiceProviders = await this.userModel.find({
       _id: {
         $in: serviceProviders.map(
@@ -172,6 +175,26 @@ export class ServicesService {
       role: Role.SERVICE_PROVIDER,
     });
 
-    return availableService.save();
+    if (validateServiceProviders.length !== serviceProviders.length) {
+      throw new BadRequestException('Invalid Service Providers');
+    }
+
+    const objectIds = serviceProviders.map(
+      (serviceProvider) => new Types.ObjectId(serviceProvider),
+    );
+
+    const updatedService = await this.service.findOneAndUpdate(
+      { _id: id },
+      {
+        $pull: {
+          serviceProviders: {
+            $in: objectIds,
+          },
+        },
+      },
+      { new: true },
+    );
+
+    return updatedService;
   }
 }
