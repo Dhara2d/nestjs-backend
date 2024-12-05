@@ -79,11 +79,12 @@ export class AppointmentsService {
   }
 
   async findAll(filters: GetAppointmentsDto): Promise<Appointment[]> {
-    const { serviceId, providerId, userId, status } = filters;
+    const { serviceId, serviceProviderId, userId, status } = filters;
 
     const query: any = {};
     if (serviceId) query.service = new Types.ObjectId(serviceId);
-    if (providerId) query.serviceProvider = new Types.ObjectId(providerId);
+    if (serviceProviderId)
+      query.serviceProvider = new Types.ObjectId(serviceProviderId);
     if (userId) query.userId = new Types.ObjectId(userId);
     if (status) query.status = status;
 

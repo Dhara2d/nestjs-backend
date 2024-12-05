@@ -10,7 +10,7 @@ export class GetAppointmentsDto {
 
   @IsOptional()
   @IsMongoId()
-  providerId?: Types.ObjectId;
+  serviceProviderId?: Types.ObjectId;
 
   @IsOptional()
   @IsMongoId()
